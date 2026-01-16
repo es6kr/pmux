@@ -3,7 +3,9 @@
 # Setup development environment
 setup:
 	git config core.hooksPath .githooks
+	git config commit.gpgsign true
 	@echo "✓ Git hooks configured"
+	@echo "✓ GPG signing enabled"
 
 # Build binary
 build: templ
