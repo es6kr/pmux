@@ -29,13 +29,15 @@ const packageJSON = `{
   "theia": {
     "frontend": {
       "config": {
-        "applicationName": "pmux IDE"
+        "applicationName": "pmux IDE",
+        "defaultLogLevel": "fatal"
       }
     },
     "backend": {
       "config": {
         "startupTimeout": 60000,
-        "warnAfter": 30000
+        "warnAfter": 30000,
+        "defaultLogLevel": "fatal"
       }
     },
     "generator": {
