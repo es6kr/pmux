@@ -11,19 +11,19 @@ const packageJSON = `{
   "name": "pmux-theia",
   "version": "1.0.0",
   "dependencies": {
-    "@theia/core": "latest",
-    "@theia/editor": "latest",
-    "@theia/filesystem": "latest",
-    "@theia/monaco": "latest",
-    "@theia/navigator": "latest",
-    "@theia/terminal": "latest",
-    "@theia/workspace": "latest",
-    "@theia/vsx-registry": "latest",
-    "@theia/plugin-ext": "latest",
-    "@theia/plugin-ext-vscode": "latest"
+    "@theia/core": "1.67.0",
+    "@theia/editor": "1.67.0",
+    "@theia/filesystem": "1.67.0",
+    "@theia/monaco": "1.67.0",
+    "@theia/navigator": "1.67.0",
+    "@theia/terminal": "1.67.0",
+    "@theia/workspace": "1.67.0",
+    "@theia/vsx-registry": "1.67.0",
+    "@theia/plugin-ext": "1.67.0",
+    "@theia/plugin-ext-vscode": "1.67.0"
   },
   "devDependencies": {
-    "@theia/cli": "latest"
+    "@theia/cli": "1.67.0"
   },
   "theiaPluginsDir": "plugins",
   "theia": {
