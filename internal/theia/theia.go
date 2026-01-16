@@ -20,7 +20,8 @@ const packageJSON = `{
     "@theia/workspace": "latest",
     "@theia/vsx-registry": "latest",
     "@theia/plugin-ext": "latest",
-    "@theia/plugin-ext-vscode": "latest"
+    "@theia/plugin-ext-vscode": "latest",
+    "@theia/webview": "latest"
   },
   "devDependencies": {
     "@theia/cli": "latest"
