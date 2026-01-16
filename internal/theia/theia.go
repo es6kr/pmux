@@ -25,10 +25,16 @@ const packageJSON = `{
   "devDependencies": {
     "@theia/cli": "latest"
   },
+  "theiaPluginsDir": "plugins",
   "theia": {
     "frontend": {
       "config": {
         "applicationName": "pmux IDE"
+      }
+    },
+    "backend": {
+      "config": {
+        "startupTimeout": -1
       }
     }
   }
@@ -47,6 +53,12 @@ func EnsureInstalled() error {
 	// Create directory if not exists
 	if err := os.MkdirAll(dir, 0755); err != nil {
 		return fmt.Errorf("failed to create theia directory: %w", err)
+	}
+
+	// Create plugins directory
+	pluginsDir := filepath.Join(dir, "plugins")
+	if err := os.MkdirAll(pluginsDir, 0755); err != nil {
+		return fmt.Errorf("failed to create plugins directory: %w", err)
 	}
 
 	pkgPath := filepath.Join(dir, "package.json")
@@ -128,9 +140,11 @@ func Start(dir string, port int) error {
 	fmt.Printf("Starting Theia IDE at http://localhost:%d\n", port)
 	fmt.Printf("Working directory: %s\n", absDir)
 
+	pluginsDir := filepath.Join(theiaDir(), "plugins")
 	cmd := exec.Command("npx", "theia", "start", absDir,
 		"--hostname", "0.0.0.0",
 		"--port", fmt.Sprintf("%d", port),
+		"--plugins=local-dir:"+pluginsDir,
 	)
 	cmd.Dir = theiaDir()
 	cmd.Stdout = os.Stdout
