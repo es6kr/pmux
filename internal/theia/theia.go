@@ -17,7 +17,8 @@ const packageJSON = `{
     "@theia/monaco": "latest",
     "@theia/navigator": "latest",
     "@theia/terminal": "latest",
-    "@theia/workspace": "latest"
+    "@theia/workspace": "latest",
+    "@theia/vsx-registry": "latest"
   },
   "devDependencies": {
     "@theia/cli": "latest"
