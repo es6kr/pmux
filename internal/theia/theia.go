@@ -34,7 +34,13 @@ const packageJSON = `{
     },
     "backend": {
       "config": {
-        "startupTimeout": -1
+        "startupTimeout": 60000,
+        "warnAfter": 30000
+      }
+    },
+    "generator": {
+      "config": {
+        "preloadTemplate": ""
       }
     }
   }
@@ -150,6 +156,10 @@ func Start(dir string, port int) error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
+	cmd.Env = append(os.Environ(),
+		"THEIA_PLUGIN_HOST_TIMEOUT=60000",
+		"THEIA_BACKEND_HOST_TIMEOUT=60000",
+	)
 
 	return cmd.Run()
 }
