@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+echo "🧪 Running pre-push checks..."
+
+# Unit tests
+echo "→ Running tests..."
+go test ./... -v
+echo "✓ Tests OK"
+
+# Build check
+echo "→ Checking build..."
+go build -o /dev/null ./cmd/pmux
+echo "✓ Build OK"
+
+echo "✅ Pre-push checks passed"

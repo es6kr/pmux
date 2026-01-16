@@ -1,0 +1,23 @@
+#!/bin/bash
+set -e
+
+echo "🔍 Running pre-commit checks..."
+
+# Format check
+echo "→ Checking format..."
+UNFORMATTED=$(gofmt -l .)
+if [ -n "$UNFORMATTED" ]; then
+    echo "❌ The following files are not formatted:"
+    echo "$UNFORMATTED"
+    echo ""
+    echo "Run: gofmt -w ."
+    exit 1
+fi
+echo "✓ Format OK"
+
+# Vet
+echo "→ Running go vet..."
+go vet ./...
+echo "✓ Vet OK"
+
+echo "✅ Pre-commit checks passed"

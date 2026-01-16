@@ -1,0 +1,89 @@
+package view
+
+import (
+	"github.com/es6kr/pmux/internal/session"
+)
+
+templ Index(sessions []session.Session) {
+	@Layout("Sessions") {
+		<div class="space-y-6">
+			<div class="flex justify-between items-center">
+				<h1 class="text-2xl font-bold">Sessions</h1>
+				<form hx-post="/sessions" hx-target="#session-list" hx-swap="innerHTML" class="flex gap-2">
+					<input
+						type="text"
+						name="channel"
+						placeholder="Channel name"
+						class="bg-gray-800 border border-gray-600 rounded px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
+					/>
+					<button
+						type="submit"
+						class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm font-medium"
+					>
+						New Session
+					</button>
+				</form>
+			</div>
+
+			<div id="session-list" hx-get="/sessions" hx-trigger="every 5s">
+				@SessionList(sessions)
+			</div>
+		</div>
+	}
+}
+
+templ SessionList(sessions []session.Session) {
+	if len(sessions) == 0 {
+		<div class="text-center py-12 text-gray-500">
+			<p>No active sessions</p>
+			<p class="text-sm mt-2">Create a new session to get started</p>
+		</div>
+	} else {
+		<div class="grid gap-4">
+			for _, s := range sessions {
+				<div class="bg-gray-800 rounded-lg p-4 border border-gray-700 flex justify-between items-center">
+					<div>
+						<h3 class="font-medium text-lg">{ s.Channel }</h3>
+						<p class="text-sm text-gray-400">{ s.Socket }</p>
+						<div class="flex gap-4 mt-2 text-sm">
+							<span class={ "px-2 py-0.5 rounded", templ.KV("bg-green-900 text-green-300", s.Active), templ.KV("bg-red-900 text-red-300", !s.Active) }>
+								if s.Active {
+									Active
+								} else {
+									Inactive
+								}
+							</span>
+							<span class="text-gray-500">{ formatClients(s.Clients) }</span>
+						</div>
+					</div>
+					<div class="flex gap-2">
+						<a
+							href={ templ.SafeURL("/terminal/" + s.Channel) }
+							class="bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded text-sm"
+						>
+							Open
+						</a>
+						<button
+							hx-delete={ "/sessions/" + s.Channel }
+							hx-target="#session-list"
+							hx-swap="innerHTML"
+							hx-confirm="Are you sure you want to stop this session?"
+							class="bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded text-sm"
+						>
+							Stop
+						</button>
+					</div>
+				</div>
+			}
+		</div>
+	}
+}
+
+func formatClients(n int) string {
+	if n == 0 {
+		return "No clients"
+	} else if n == 1 {
+		return "1 client"
+	}
+	return string(rune('0'+n)) + " clients"
+}
