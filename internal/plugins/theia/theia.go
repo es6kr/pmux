@@ -18,6 +18,7 @@ func init() {
 
 func registerCommands(root *cobra.Command) {
 	var port int
+	var hostname string
 
 	theiaCmd := &cobra.Command{
 		Use:   "theia [directory]",
@@ -28,10 +29,11 @@ func registerCommands(root *cobra.Command) {
 			if len(args) > 0 {
 				dir = args[0]
 			}
-			return theia.Start(dir, port)
+			return theia.Start(dir, port, hostname)
 		},
 	}
 	theiaCmd.Flags().IntVarP(&port, "port", "p", 3000, "Port for Theia IDE")
+	theiaCmd.Flags().StringVarP(&hostname, "hostname", "H", "", "Hostname to bind (default: current IP or 0.0.0.0)")
 
 	root.AddCommand(theiaCmd)
 }

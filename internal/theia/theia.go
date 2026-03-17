@@ -2,6 +2,7 @@ package theia
 
 import (
 	"fmt"
+	"net"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -29,15 +30,13 @@ const packageJSON = `{
   "theia": {
     "frontend": {
       "config": {
-        "applicationName": "pmux IDE",
-        "defaultLogLevel": "fatal"
+        "applicationName": "pmux IDE"
       }
     },
     "backend": {
       "config": {
         "startupTimeout": 60000,
-        "warnAfter": 30000,
-        "defaultLogLevel": "fatal"
+        "warnAfter": 30000
       }
     },
     "generator": {
@@ -120,8 +119,20 @@ func EnsureInstalled() error {
 	return nil
 }
 
+// getLocalIP returns the preferred outbound IP of this machine
+func getLocalIP() string {
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+	if err != nil {
+		return "0.0.0.0"
+	}
+	defer conn.Close()
+
+	localAddr := conn.LocalAddr().(*net.UDPAddr)
+	return localAddr.IP.String()
+}
+
 // Start starts Theia IDE for a directory
-func Start(dir string, port int) error {
+func Start(dir string, port int, hostname string) error {
 	if err := EnsureInstalled(); err != nil {
 		return err
 	}
@@ -145,12 +156,20 @@ func Start(dir string, port int) error {
 		return fmt.Errorf("directory '%s' does not exist", absDir)
 	}
 
-	fmt.Printf("Starting Theia IDE at http://localhost:%d\n", port)
+	// Determine hostname
+	bindHost := hostname
+	displayHost := hostname
+	if hostname == "" {
+		bindHost = "0.0.0.0"
+		displayHost = getLocalIP()
+	}
+
+	fmt.Printf("Starting Theia IDE at http://%s:%d\n", displayHost, port)
 	fmt.Printf("Working directory: %s\n", absDir)
 
 	pluginsDir := filepath.Join(theiaDir(), "plugins")
 	cmd := exec.Command("npx", "theia", "start", absDir,
-		"--hostname", "0.0.0.0",
+		"--hostname", bindHost,
 		"--port", fmt.Sprintf("%d", port),
 		"--plugins=local-dir:"+pluginsDir,
 	)
